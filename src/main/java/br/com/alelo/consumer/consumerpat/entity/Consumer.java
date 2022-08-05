@@ -1,69 +1,62 @@
 package br.com.alelo.consumer.consumerpat.entity;
 
 
-import jdk.jfr.DataAmount;
-import lombok.Data;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
-import java.util.Objects;
 
 
 @Data
 @Entity
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Consumer {
+
+    public static final int NAME_LENGTH = 50;
+    public static final int DOCUMENT_NUMBER_LENGTH = 20;
+    public static final int MOBILE_PHONE_NUMBER_LENGTH = 20;
+    public static final int RESIDENCE_PHONE_LENGTH = 20;
+    public static final int PHONE_NUMBER_LENGTH = 20;
+    public static final int EMAIL_LENGTH = 20;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Integer id;
-    String name;
-    int documentNumber;
-    Date birthDate;
+    private Integer id;
+
+    @Column(name = "name", nullable = false, length = NAME_LENGTH)
+    private String name;
+    @Column(name = "documentNumber", nullable = false, length = DOCUMENT_NUMBER_LENGTH)
+    private String documentNumber;
+    @Column(name = "birthDate", nullable = true)
+    private Date birthDate;
 
     //contacts
-    int mobilePhoneNumber;
-    int residencePhoneNumber;
-    int phoneNumber;
-    String email;
+    @Column(name = "mobilePhoneNumber", nullable = false, length = MOBILE_PHONE_NUMBER_LENGTH)
+    private String mobilePhoneNumber;
 
-    //Address
-    String street;
-    int number;
-    String city;
-    String country;
-    int portalCode;
+    @Column(name = "residencePhoneNumber", nullable = true, length = RESIDENCE_PHONE_LENGTH)
+    private String residencePhoneNumber;
+    @Column(name = "phoneNumber", nullable = true, length = PHONE_NUMBER_LENGTH)
+    private String phoneNumber;
+    @Column(name = "email", nullable = false, length = EMAIL_LENGTH)
+    private String email;
 
-    //cards
-    int foodCardNumber;
-    double foodCardBalance;
-
-    int fuelCardNumber;
-    double fuelCardBalance;
-
-    int drugstoreNumber;
-    double drugstoreCardBalance;
+    @ManyToOne(cascade= CascadeType.ALL)
+    private Address address;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Consumer consumer = (Consumer) o;
-        return documentNumber == consumer.documentNumber
-                && mobilePhoneNumber == consumer.mobilePhoneNumber
-                && residencePhoneNumber == consumer.residencePhoneNumber
-                && phoneNumber == consumer.phoneNumber
-                && number == consumer.number
-                && portalCode == consumer.portalCode
-                && foodCardNumber == consumer.foodCardNumber
-                && Double.compare(consumer.foodCardBalance, foodCardBalance) == 0
-                && fuelCardNumber == consumer.fuelCardNumber && Double.compare(consumer.fuelCardBalance, fuelCardBalance) == 0
-                && drugstoreNumber == consumer.drugstoreNumber && Double.compare(consumer.drugstoreCardBalance, drugstoreCardBalance) == 0
-                && Objects.equals(id, consumer.id) && Objects.equals(name, consumer.name) && Objects.equals(birthDate, consumer.birthDate)
-                && Objects.equals(email, consumer.email) && Objects.equals(street, consumer.street) && Objects.equals(city, consumer.city)
-                && Objects.equals(country, consumer.country);
+        return documentNumber.equals(consumer.documentNumber)
+                && email.equals(consumer.email)
+                && mobilePhoneNumber.equals(consumer.mobilePhoneNumber);
     }
 
 

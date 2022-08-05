@@ -1,49 +1,45 @@
 package br.com.alelo.consumer.consumerpat.entity;
 
-import lombok.Data;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 
 @Data
 @Entity
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Extract {
 
     @Id
-    int id;
-    int establishmentNameId;
-    String establishmentName;
-    String productDescription;
-    Date dateBuy;
-    int cardNumber;
-    double value;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
+    @Column(name = "dateBuy", nullable = false)
+    private Date dateBuy;
 
-    public Extract(int id, int establishmentNameId, String establishmentName, String productDescription, Date dateBuy, int cardNumber, double value) {
-        this.id = id;
-        this.establishmentNameId = establishmentNameId;
-        this.establishmentName = establishmentName;
-        this.productDescription = productDescription;
-        this.dateBuy = dateBuy;
-        this.cardNumber = cardNumber;
-        this.value = value;
+    @ManyToOne(cascade= CascadeType.MERGE)
+    private Card cardNumber;
+
+    @Column(name = "value", nullable = false)
+    private BigDecimal value;
+
+    @ManyToOne(cascade= CascadeType.MERGE)
+    private Establishment establishment;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Extract extract = (Extract) o;
+        return  extract.dateBuy.equals(this.dateBuy) &&
+                extract.cardNumber.equals(this.cardNumber) &&
+                extract.establishment.equals(this.establishment);
     }
 
-    public Extract( String productDescription, Date dateBuy, int cardNumber, double value) {
-        this.productDescription = productDescription;
-        this.dateBuy = dateBuy;
-        this.cardNumber = cardNumber;
-        this.value = value;
-    }
-
-    public Extract(String establishmentName, String productDescription, Date dateBuy, int cardNumber, double value) {
-        this.establishmentNameId = establishmentNameId;
-        this.establishmentName = establishmentName;
-        this.productDescription = productDescription;
-        this.dateBuy = dateBuy;
-        this.cardNumber = cardNumber;
-        this.value = value;
-    }
 }
